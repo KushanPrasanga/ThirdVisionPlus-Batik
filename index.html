@@ -976,8 +976,11 @@
     }
     </script>
 
-    <!-- Eruda Console (for debugging on phone) -->
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>eruda.init();</script>
+    <!-- vConsole - for debugging on phone -->
+    <script src="https://unpkg.com/vconsole/dist/vconsole.min.js"></script>
+    <script>
+        var vConsole = new VConsole();
+        console.log('vConsole initialized');
+    </script>
 </body>
 </html>
