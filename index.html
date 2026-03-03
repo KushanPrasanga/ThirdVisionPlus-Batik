@@ -50,7 +50,7 @@
         .navbar { 
             background: var(--brand-yellow); 
             color: #000; 
-            padding: 12px 20px; 
+            padding: 8px 20px; 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
@@ -341,11 +341,113 @@
 
         .sticky-controls-wrapper { 
             position: sticky; 
-            top: 73px; 
+            top: 110px; 
             z-index: 1500; 
             background: var(--bg); 
             padding: 5px 0; 
             border-bottom: 1px solid #222; 
+        }
+        
+        /* WhatsApp Support Section Styles (original) - ක්‍රියාත්මක නොවේ */
+        .whatsapp-support {
+            padding: 6px 15px;
+            background: linear-gradient(90deg, #1a1a00, #000);
+            border-bottom: 1px solid #ffd700;
+            text-align: right;
+        }
+        .whatsapp-support a {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #25D366;
+            color: white;
+            text-decoration: none;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 13px;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 15px rgba(37, 211, 102, 0.5);
+            transition: transform 0.3s;
+            max-width: 100%;
+            word-wrap: break-word;
+            line-height: 1.3;
+        }
+        .whatsapp-support a:hover {
+            animation: none;
+            transform: scale(1.02);
+            background: #20b859;
+        }
+        
+        /* නව සරල WhatsApp බටන් - නියත වශයෙන්ම පෙනෙන */
+        .simple-support-container {
+            padding: 10px 15px;
+            background: #0d0d0d;
+            border-bottom: 2px solid #25D366;
+            text-align: center;
+            display: block !important;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .simple-support-title {
+            color: #25D366;
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .simple-support-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .simple-support-btn {
+            flex: 1 1 180px;
+            background: rgba(37, 211, 102, 0.15);
+            border: 2px solid #25D366;
+            color: white !important;
+            padding: 12px 16px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+            display: inline-block !important;
+            text-align: center;
+            box-shadow: 0 0 12px rgba(37, 211, 102, 0.3);
+            animation: pulse 2s infinite;
+        }
+        .simple-support-btn:hover {
+            background: #25D366;
+            color: black !important;
+            transform: scale(1.03);
+            animation: none;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 6px 12px;
+            }
+            .nav-logo img {
+                width: 50px;
+                height: 50px;
+            }
+            .whatsapp-support {
+                text-align: center;
+            }
+            .whatsapp-support a {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+            .simple-support-btn {
+                font-size: 13px;
+                padding: 10px 12px;
+                flex: 1 1 140px;
+            }
+            .sticky-controls-wrapper {
+                top: 105px;
+            }
         }
     </style>
 </head>
@@ -353,10 +455,10 @@
 <body>
     <!-- Splash Screen -->
     <div id="splash-screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#050505; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-        <div class="nav-logo" style="width:80px; height:80px; font-size:24px; margin-bottom:20px; box-shadow: 0 0 20px var(--brand-yellow); animation: pulse 2s infinite;">TVP</div>
-        <h1 style="color:var(--brand-yellow); font-size:18px; letter-spacing:4px; font-weight:900;">BATHIXEN MASTER</h1>
-        <p style="color:#555; font-size:10px; margin-top:10px; letter-spacing:2px;">THIRDVISIONPLUS ENGINEERING</p>
-        <div style="width:100px; height:2px; background:#111; margin-top:20px; overflow:hidden;">
+        <div class="nav-logo" style="width:70px; height:70px; font-size:22px; margin-bottom:15px; box-shadow: 0 0 20px var(--brand-yellow); animation: pulse 2s infinite;">TVP</div>
+        <h1 style="color:var(--brand-yellow); font-size:16px; letter-spacing:3px; font-weight:900;">BATHIXEN MASTER</h1>
+        <p style="color:#555; font-size:9px; margin-top:8px; letter-spacing:1px;">THIRDVISIONPLUS ENGINEERING</p>
+        <div style="width:80px; height:2px; background:#111; margin-top:15px; overflow:hidden;">
             <div id="splash-loader" style="width:0%; height:100%; background:var(--brand-yellow); transition: 1.5s ease-in-out;"></div>
         </div>
     </div>
@@ -364,31 +466,47 @@
     <!-- Sticky Header -->
     <div class="sticky-top">
         <header class="navbar">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <img src="assets/logo.png" alt="TVP Logo" style="width:80px; height:80px; border-radius: 15px; margin-bottom:20px; box-shadow: 0 0 20px var(--brand-yellow); animation: pulse 2s infinite; object-fit: cover;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <img src="assets/logo.png" alt="TVP Logo" style="width:60px; height:60px; border-radius: 12px; box-shadow: 0 0 15px var(--brand-yellow); animation: pulse 2s infinite; object-fit: cover;">
                 <div class="nav-title">BathiXen Master</div>
             </div>
-            <button onclick="logout()" style="background:#000; color:var(--brand-yellow); border:none; padding:8px; border-radius:50%;">✕</button>
+            <button onclick="logout()" style="background:#000; color:var(--brand-yellow); border:none; padding:6px 10px; border-radius:40px; font-size:14px;">✕</button>
         </header>
         
         <!-- User Info Bar -->
-        <div style="display: flex; align-items: center; justify-content: space-between; padding: 4px 15px; background: #000; border-bottom: 1px solid #222;">
-            <div id="user-info-display" style="display: flex; align-items: center; gap: 6px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 3px 12px; background: #000; border-bottom: 1px solid #222;">
+            <div id="user-info-display" style="display: flex; align-items: center; gap: 5px;">
                 <div style="width: 6px; height: 6px; background: #39ff14; border-radius: 50%; box-shadow: 0 0 5px #39ff14;"></div>
-                <span style="color: #39ff14; font-size: 10px; font-weight: bold;">Loading User...</span>
+                <span style="color: #39ff14; font-size: 9px; font-weight: bold;">Loading User...</span>
             </div>
-            <div style="color: #555; font-size: 8px; font-weight: 800; letter-spacing: 1px;">ENCRYPTED ACCESS</div>
+            <div style="color: #555; font-size: 7px; font-weight: 800; letter-spacing: 0.5px;">ENCRYPTED ACCESS</div>
         </div>
 
         <!-- Sticky Inventory Tabs -->
-        <div id="stickyInventoryTabs" style="display:none; background: #050505; padding: 10px; border-bottom: 1px solid #222;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
-                <button class="mode-btn mode-active-target" onclick="filterStore('dyes')" style="padding: 8px; font-size: 9px;">DYES</button>
-                <button class="mode-btn" onclick="filterStore('fabrics')" style="padding: 8px; font-size: 9px;">FABRICS</button>
-                <button class="mode-btn" onclick="filterStore('chemicals')" style="padding: 8px; font-size: 9px;">CHEMICALS</button>
+        <div id="stickyInventoryTabs" style="display:none; background: #050505; padding: 8px; border-bottom: 1px solid #222;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+                <button class="mode-btn mode-active-target" onclick="filterStore('dyes')" style="padding: 6px; font-size: 8px;">DYES</button>
+                <button class="mode-btn" onclick="filterStore('fabrics')" style="padding: 6px; font-size: 8px;">FABRICS</button>
+                <button class="mode-btn" onclick="filterStore('chemicals')" style="padding: 6px; font-size: 8px;">CHEMICALS</button>
             </div>
         </div>
     </div>
+
+    <!-- ========== නව බටන් දෙක - නියතව පෙනෙන ========== -->
+    <div class="simple-support-container">
+        <div class="simple-support-title">⚡ උදව් අවශ්‍යද? ඔබේ ගැටළුව තෝරන්න</div>
+        <div class="simple-support-grid">
+            <!-- Button 1: බතික් ගැටළු -->
+            <a href="https://wa.me/94704040776?text=මට%20බතික්%20සම්බන්ධ%20ගැටළුවක්%20තියෙනවා." target="_blank" class="simple-support-btn">
+                🎨 බතික් ගැටළු
+            </a>
+            <!-- Button 2: app උදව් -->
+            <a href="https://wa.me/94704040776?text=මට%20app%20එකේ%20වැඩ%20කරන%20හැටි%20දැනගන්න%20ඕන." target="_blank" class="simple-support-btn">
+                📱 App උදව්
+            </a>
+        </div>
+    </div>
+    <!-- ============================================== -->
 
     <!-- Main Container -->
     <div class="main-container">
@@ -399,9 +517,9 @@
         </div>
 
         <!-- Methodology Selector -->
-        <div style="padding: 0 15px 5px 15px;">
-            <h4 style="color:#666; font-size:9px; margin-bottom:8px; letter-spacing:1px; text-align:center;">CHOOSE PRODUCTION METHODOLOGY</h4>
-            <select id="methodSelector" class="input-field" onchange="updateHeader()" style="border: 1px solid var(--brand-yellow); color: var(--brand-yellow); background: #1a1a00; font-weight: bold; margin-bottom: 5px;">
+        <div style="padding: 0 12px 5px 12px;">
+            <h4 style="color:#666; font-size:8px; margin-bottom:5px; letter-spacing:0.5px; text-align:center;">CHOOSE PRODUCTION METHODOLOGY</h4>
+            <select id="methodSelector" class="input-field" onchange="updateHeader()" style="border: 1px solid var(--brand-yellow); color: var(--brand-yellow); background: #1a1a00; font-weight: bold; margin-bottom: 5px; font-size:11px; padding:10px;">
                 <option value="">-- SELECT PROCESS METHOD --</option>
                 <option value="Reactive Dyeing">01. Reactive Dyeing</option>
                 <option value="Vat Dyeing">02. Vat Dyeing</option>
@@ -441,8 +559,8 @@
         <div id="calcMod" class="module-card">
             <!-- Image/Color Wheel Buttons -->
             <div class="sub-btn-grid">
-                <button onclick="showImg()" style="background:#1a1a1a; color:#fff; border:1px solid #333; padding:10px; border-radius:8px; font-size:10px; font-weight:bold;">IMAGE PICKER</button>
-                <button onclick="showWheel()" style="background:#1a1a1a; color:#fff; border:1px solid #333; padding:10px; border-radius:8px; font-size:10px; font-weight:bold;">COLOR WHEEL</button>
+                <button onclick="showImg()" style="background:#1a1a1a; color:#fff; border:1px solid #333; padding:10px; border-radius:8px; font-size:9px; font-weight:bold;">IMAGE PICKER</button>
+                <button onclick="showWheel()" style="background:#1a1a1a; color:#fff; border:1px solid #333; padding:10px; border-radius:8px; font-size:9px; font-weight:bold;">COLOR WHEEL</button>
             </div>
             
             <!-- File Input -->
@@ -464,13 +582,13 @@
                 <div class="swatch-box">
                     <div id="targetSwatch" class="swatch" style="background: #000; border-color: var(--neon-cyan);"></div>
                     <div class="swatch-label">TARGET RGB</div>
-                    <div id="targetRGBDisp" style="font-size:9px; color:var(--neon-cyan);">0, 0, 0</div>
+                    <div id="targetRGBDisp" style="font-size:8px; color:var(--neon-cyan);">0,0,0</div>
                 </div>
-                <div style="width:1px; height:40px; background:#222;"></div>
+                <div style="width:1px; height:30px; background:#222;"></div>
                 <div class="swatch-box">
                     <div id="bgSwatch" class="swatch" style="background: #fff; border-color: var(--neon-magenta);"></div>
                     <div class="swatch-label">BACKGRND RGB</div>
-                    <div id="bgRGBDisp" style="font-size:9px; color:var(--neon-magenta);">255, 255, 255</div>
+                    <div id="bgRGBDisp" style="font-size:8px; color:var(--neon-magenta);">255,255,255</div>
                 </div>
             </div>
 
@@ -497,9 +615,9 @@
             </div>
 
             <!-- Production Details -->
-            <h4 style="color:#666; font-size:9px; margin-top:20px; letter-spacing:1px; display: flex; align-items: center; gap: 5px;">
+            <h4 style="color:#666; font-size:8px; margin-top:15px; letter-spacing:0.5px; display: flex; align-items: center; gap: 5px;">
                 <span>📋 PRODUCTION DETAILS</span>
-                <span style="background: #ffd700; color: #000; padding: 2px 8px; border-radius: 12px; font-size: 8px; font-weight: bold;">WAX COVERAGE</span>
+                <span style="background: #ffd700; color: #000; padding: 2px 6px; border-radius: 10px; font-size: 7px; font-weight: bold;">WAX COVERAGE</span>
             </h4>
 
             <!-- Fabric Selection -->
@@ -508,28 +626,28 @@
             </select>
 
             <!-- Weight Input -->
-            <div style="position: relative; margin-bottom: 10px;">
+            <div style="position: relative; margin-bottom: 8px;">
                 <input type="number" id="weight" class="input-field" placeholder="FABRIC WEIGHT (GMS)" style="padding-left: 35px;" oninput="updateWaxDisplay()">
-                <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #ffd700; font-size: 14px;">⚖️</span>
+                <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #ffd700; font-size: 12px;">⚖️</span>
             </div>
 
             <!-- WAX COVERAGE SECTION -->
-            <div style="background: linear-gradient(145deg, #1a1a00 0%, #000 100%); border: 2px solid #ffd700; border-radius: 16px; padding: 15px; margin: 15px 0; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);">
+            <div style="background: linear-gradient(145deg, #1a1a00 0%, #000 100%); border: 2px solid #ffd700; border-radius: 16px; padding: 12px; margin: 12px 0; box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);">
                 
                 <!-- Header -->
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                    <div style="background: #ffd700; width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #000; font-size: 18px;">🕯️</div>
+                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 10px;">
+                    <div style="background: #ffd700; width: 25px; height: 25px; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #000; font-size: 14px;">🕯️</div>
                     <div>
-                        <div style="color: #ffd700; font-size: 14px; font-weight: bold;">WAX COVERAGE AREA</div>
-                        <div style="color: #888; font-size: 9px;">ඉටි ආවරණය කරපු ප්‍රදේශය % (Wax applied area)</div>
+                        <div style="color: #ffd700; font-size: 12px; font-weight: bold;">WAX COVERAGE AREA</div>
+                        <div style="color: #888; font-size: 8px;">ඉටි ආවරණය කරපු ප්‍රදේශය %</div>
                     </div>
                 </div>
                 
                 <!-- Slider -->
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                    <div style="background: #000; border: 1px solid #333; border-radius: 12px; padding: 5px 15px; display: flex; align-items: center; flex: 1;">
-                        <input type="range" id="waxSlider" min="0" max="100" value="50" style="flex: 1; height: 6px; accent-color: #ffd700;" oninput="updateWaxDisplay()">
-                        <span id="waxPercentDisplay" style="color: #ffd700; font-weight: bold; font-size: 18px; min-width: 45px; text-align: right;">50%</span>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <div style="background: #000; border: 1px solid #333; border-radius: 10px; padding: 3px 10px; display: flex; align-items: center; flex: 1;">
+                        <input type="range" id="waxSlider" min="0" max="100" value="50" style="flex: 1; height: 5px; accent-color: #ffd700;" oninput="updateWaxDisplay()">
+                        <span id="waxPercentDisplay" style="color: #ffd700; font-weight: bold; font-size: 16px; min-width: 40px; text-align: right;">50%</span>
                     </div>
                 </div>
                 
@@ -537,66 +655,65 @@
                 <input type="number" id="waxPercent" value="50" style="display: none;">
                 
                 <!-- Visual Bars -->
-                <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+                <div style="display: flex; align-items: center; gap: 6px; margin-top: 8px;">
                     <div style="flex: 1; text-align: center;">
-                        <div style="background: linear-gradient(135deg, #888, #444); height: 20px; width: 0%; border-radius: 10px 0 0 10px;" id="waxAreaBar"></div>
-                        <div style="font-size: 9px; color: #888; margin-top: 5px;">🕯️ WAX AREA <span id="waxAreaPercent">50%</span></div>
+                        <div style="background: linear-gradient(135deg, #888, #444); height: 15px; width: 0%; border-radius: 8px 0 0 8px;" id="waxAreaBar"></div>
+                        <div style="font-size: 8px; color: #888; margin-top: 4px;">🕯️ WAX <span id="waxAreaPercent">50%</span></div>
                     </div>
-                    
                     <div style="flex: 1; text-align: center;">
-                        <div style="background: linear-gradient(135deg, #0ff, #39ff14); height: 20px; width: 0%; border-radius: 0 10px 10px 0;" id="dyeAreaBar"></div>
-                        <div style="font-size: 9px; color: #0ff; margin-top: 5px;">🎨 DYE AREA <span id="dyeAreaPercent">50%</span></div>
+                        <div style="background: linear-gradient(135deg, #0ff, #39ff14); height: 15px; width: 0%; border-radius: 0 8px 8px 0;" id="dyeAreaBar"></div>
+                        <div style="font-size: 8px; color: #0ff; margin-top: 4px;">🎨 DYE <span id="dyeAreaPercent">50%</span></div>
                     </div>
                 </div>
                 
-                <!-- Wax Composition Selection - Omini Wax Technology -->
-                <div style="margin-top: 15px; background: #111; border-radius: 8px; padding: 12px;">
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                        <span style="color: #ffd700; font-size: 14px;">🧪 ඉටි මිශ්‍රණය තෝරන්න</span>
-                        <span style="background: #ffd700; color: #000; padding: 2px 8px; border-radius: 12px; font-size: 8px;">Omini Wax Technology</span>
+                <!-- Wax Composition Selection -->
+                <div style="margin-top: 12px; background: #111; border-radius: 8px; padding: 10px;">
+                    <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                        <span style="color: #ffd700; font-size: 12px;">🧪 ඉටි මිශ්‍රණය</span>
+                        <span style="background: #ffd700; color: #000; padding: 1px 6px; border-radius: 10px; font-size: 7px;">Omini Tech</span>
                     </div>
-                    <select id="waxCompositionSelect" class="input-field" style="border-color: #ffd700; color: #ffd700; background: #1a1a00;">
+                    <select id="waxCompositionSelect" class="input-field" style="border-color: #ffd700; color: #ffd700; background: #1a1a00; font-size:10px;">
                         <option value="standard">🏮 සම්මත මිශ්‍රණය (70% Paraffin, 20% Bee, 10% Omini)</option>
                         <option value="high_covering">🔥 High Covering (60% Paraffin, 20% Bee, 20% Omini)</option>
                         <option value="fine_lines">✨ සියුම් රේඛා (50% Paraffin, 15% Bee, 25% Omini, 10% Rosin)</option>
                         <option value="eco_noboil">🌿 Eco No-Boil (80% Paraffin, 20% Rosin)</option>
                     </select>
-                    <div id="waxDescription" style="font-size: 9px; color: #aaa; margin-top: 5px; padding: 4px; background: #000; border-radius: 4px;">
+                    <div id="waxDescription" style="font-size: 8px; color: #aaa; margin-top: 4px; padding: 3px; background: #000; border-radius: 4px;">
                         45°C-50°C - හොඳින් ඉරිතැලීම්
                     </div>
                 </div>
                 
                 <!-- Effective Weight Display -->
-                <div id="effectiveWeightContainer" style="margin-top: 15px; background: #1a1a1a; border-radius: 10px; padding: 12px; border: 1px solid #39ff14; display: none;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                        <span style="color: #888; font-size: 10px;">🧮 EFFECTIVE WEIGHT FOR DYE CALCULATION:</span>
-                        <span id="effectiveWeightValue" style="color: #39ff14; font-weight: bold; font-size: 20px;">0g</span>
+                <div id="effectiveWeightContainer" style="margin-top: 12px; background: #1a1a1a; border-radius: 8px; padding: 10px; border: 1px solid #39ff14; display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <span style="color: #888; font-size: 9px;">🧮 EFFECTIVE WEIGHT:</span>
+                        <span id="effectiveWeightValue" style="color: #39ff14; font-weight: bold; font-size: 16px;">0g</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 9px; color: #666; border-top: 1px solid #333; padding-top: 5px;">
-                        <span>Wax-free area: <span id="waxFreeWeight">0g</span></span>
+                    <div style="display: flex; justify-content: space-between; font-size: 8px; color: #666; border-top: 1px solid #333; padding-top: 4px;">
+                        <span>Wax-free: <span id="waxFreeWeight">0g</span></span>
                         <span>+</span>
-                        <span>Penetration (60%): <span id="penetrationWeight">0g</span></span>
+                        <span>Penetration: <span id="penetrationWeight">0g</span></span>
                     </div>
                 </div>
                 
                 <!-- Info Box -->
-                <div style="background: #111; border-radius: 8px; padding: 8px; margin-top: 10px; font-size: 9px; color: #888; display: flex; align-items: center; gap: 5px; border-left: 3px solid #ffd700;">
+                <div style="background: #111; border-radius: 6px; padding: 6px; margin-top: 8px; font-size: 8px; color: #888; display: flex; align-items: center; gap: 4px; border-left: 3px solid #ffd700;">
                     <span style="color: #ffd700;">💡</span>
-                    <span>Wax cracks & edges allow <b style="color: #39ff14;">60%</b> dye penetration through wax area</span>
+                    <span>Wax cracks allow <b style="color: #39ff14;">60%</b> dye penetration</span>
                 </div>
                 
                 <!-- Preset Buttons -->
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 10px;">
-                    <button onclick="setWaxCoverage(0)" style="background: #111; border: 1px solid #333; color: #888; padding: 5px; border-radius: 6px; font-size: 9px; cursor: pointer;">0%</button>
-                    <button onclick="setWaxCoverage(25)" style="background: #111; border: 1px solid #333; color: #888; padding: 5px; border-radius: 6px; font-size: 9px; cursor: pointer;">25%</button>
-                    <button onclick="setWaxCoverage(50)" style="background: #111; border: 1px solid #ffd700; color: #ffd700; padding: 5px; border-radius: 6px; font-size: 9px; cursor: pointer;">50%</button>
-                    <button onclick="setWaxCoverage(75)" style="background: #111; border: 1px solid #333; color: #888; padding: 5px; border-radius: 6px; font-size: 9px; cursor: pointer;">75%</button>
-                    <button onclick="setWaxCoverage(100)" style="grid-column: span 4; background: #111; border: 1px solid #ff3131; color: #ff3131; padding: 5px; border-radius: 6px; font-size: 9px; cursor: pointer; margin-top: 5px;">100% (FULL WAX - NO DYE)</button>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 8px;">
+                    <button onclick="setWaxCoverage(0)" style="background: #111; border: 1px solid #333; color: #888; padding: 4px; border-radius: 5px; font-size: 8px; cursor: pointer;">0%</button>
+                    <button onclick="setWaxCoverage(25)" style="background: #111; border: 1px solid #333; color: #888; padding: 4px; border-radius: 5px; font-size: 8px; cursor: pointer;">25%</button>
+                    <button onclick="setWaxCoverage(50)" style="background: #111; border: 1px solid #ffd700; color: #ffd700; padding: 4px; border-radius: 5px; font-size: 8px; cursor: pointer;">50%</button>
+                    <button onclick="setWaxCoverage(75)" style="background: #111; border: 1px solid #333; color: #888; padding: 4px; border-radius: 5px; font-size: 8px; cursor: pointer;">75%</button>
+                    <button onclick="setWaxCoverage(100)" style="grid-column: span 4; background: #111; border: 1px solid #ff3131; color: #ff3131; padding: 4px; border-radius: 5px; font-size: 8px; cursor: pointer; margin-top: 3px;">100% (FULL WAX)</button>
                 </div>
             </div>
 
             <!-- Generate Button -->
-            <button class="action-btn" onclick="processWithWax()" style="background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; font-weight: bold; margin-top: 5px;">
+            <button class="action-btn" onclick="processWithWax()" style="background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; font-weight: bold; margin-top: 5px; padding:14px;">
                 🎨 GENERATE RECIPE WITH WAX COVERAGE
             </button>
 
@@ -607,15 +724,15 @@
         <!-- Store Module -->
         <div id="storeMod" class="module-card" style="display:none">
             <div id="inventoryContent">
-                <p style="text-align:center; color:#555; font-size:11px;">LOADING INVENTORY...</p>
+                <p style="text-align:center; color:#555; font-size:10px;">LOADING INVENTORY...</p>
             </div>
         </div>
 
         <!-- Admin Module -->
         <div id="adminMod" class="module-card" style="display:none">
-            <h3 style="color:var(--neon-green); font-size:14px; text-align:center; margin-bottom:20px;">USER MANAGEMENT SYSTEM</h3>
+            <h3 style="color:var(--neon-green); font-size:13px; text-align:center; margin-bottom:15px;">USER MANAGEMENT SYSTEM</h3>
             
-            <div style="background:#000; padding:15px; border-radius:12px; border:1px solid #333; margin-bottom:20px;">
+            <div style="background:#000; padding:12px; border-radius:10px; border:1px solid #333; margin-bottom:15px;">
                 <input type="text" id="reg-name" class="input-field" placeholder="Full Name">
                 <input type="email" id="reg-email" class="input-field" placeholder="User Email (Login ID)">
                 <input type="text" id="reg-whatsapp" class="input-field" placeholder="WhatsApp Number (+94...)">
@@ -623,11 +740,11 @@
                     <option value="USER">ASSIGN ROLE: USER</option>
                     <option value="ADMIN">ASSIGN ROLE: ADMIN</option>
                 </select>
-                <button class="action-btn" style="background:var(--neon-green); color:#000; margin-top:10px;" onclick="window.addNewUser()">REGISTER NEW USER</button>
+                <button class="action-btn" style="background:var(--neon-green); color:#000; margin-top:8px;" onclick="window.addNewUser()">REGISTER NEW USER</button>
             </div>
             
             <div id="userListContainer">
-                <p style="text-align:center; color:#555; font-size:11px;">FETCHING REGISTERED USERS...</p>
+                <p style="text-align:center; color:#555; font-size:10px;">FETCHING REGISTERED USERS...</p>
             </div>
         </div>
     </div>
