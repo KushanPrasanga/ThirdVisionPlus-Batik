@@ -632,11 +632,8 @@
         </div>
     </div>
 
-    <!-- JavaScript with Alerts to find error -->
+    <!-- JavaScript -->
     <script>
-        // ALERT 1: Script started
-        alert("1. Script started");
-        
         // Tab switching function
         function tab(name) {
             document.getElementById('calcMod').style.display = 'none';
@@ -908,7 +905,7 @@
             
             if (!fabricSelect || !fabricSelect.value) {
                 alert('❌ කරුණාකර රෙදි වර්ගය තෝරන්න');
-                return;
+                return                              ;
             }
             
             const totalWeight = parseFloat(weightInput.value);
@@ -950,52 +947,33 @@
                 updateWaxDisplay();
             }, 500);
         });
-
-        // ALERT 2: Before external scripts
-        alert("2. Before external scripts");
     </script>
 
-    <!-- Scripts - Correct Order (COMMENTED OUT) -->
-    <!--
+    <!-- Scripts - Correct Order -->
     <script src="js/security-enhancer.js"></script>
     <script type="module" src="js/firebase-init.js"></script>
     <script type="module" src="js/hsop-calculator.js"></script>
     <script type="module" src="js/app.js"></script>
-    -->
-
-    <!-- Service Worker Registration (COMMENTED OUT) -->
-    <!--
-    <script>
-        alert("3. After external scripts (if this appears, scripts loaded)");
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(reg => {
-                        console.log('✅ Service Worker registered');
-                        
-                        // Check for updates
-                        reg.addEventListener('updatefound', () => {
-                            const newWorker = reg.installing;
-                            console.log('🔄 New service worker installing...');
-                        });
-                    })
-                    .catch(err => {
-                        console.error('❌ Service Worker registration failed:', err);
+    
+    <!-- Service Worker Registration -->
+   <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(reg => {
+                    console.log('✅ Service Worker registered');
+                    
+                    // Check for updates
+                    reg.addEventListener('updatefound', () => {
+                        const newWorker = reg.installing;
+                        console.log('🔄 New service worker installing...');
                     });
-            });
-        }
-    </script>
-    -->
-
-    <!-- vConsole - for debugging on phone (COMMENTED OUT) -->
-    <!--
-    <script src="https://unpkg.com/vconsole/dist/vconsole.min.js"></script>
-    <script>
-        alert("4. Before vConsole init");
-        var vConsole = new VConsole();
-        console.log('vConsole initialized');
-        alert("5. vConsole initialized");
-    </script>
-    -->
+                })
+                .catch(err => {
+                    console.error('❌ Service Worker registration failed:', err);
+                });
+        });
+    }
+</script>
 </body>
 </html>
