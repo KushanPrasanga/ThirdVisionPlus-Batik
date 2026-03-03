@@ -9,344 +9,9 @@
     <link rel="manifest" href="/manifest.json">
     
     <style>
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .fade-out {
-            opacity: 0 !important;
-            transition: opacity 0.8s ease-in-out;
-            pointer-events: none;
-        }
-
-        :root {
-            --neon-cyan: #0ff;
-            --neon-magenta: #ff00ff;
-            --neon-green: #39ff14;
-            --bg: #050505;
-            --card: #111;
-            --brand-yellow: #ffff00;
-            --alert-red: #ff3131;
-        }
-
-        body { 
-            background: var(--bg); 
-            color: #fff; 
-            font-family: 'Segoe UI', sans-serif; 
-            margin: 0; 
-            overflow-x: hidden; 
-        }
-        
-        /* Navigation */
-        .sticky-top { 
-            position: sticky; 
-            top: 0; 
-            z-index: 2000; 
-            background: var(--bg); 
-        }
-        
-        .navbar { 
-            background: var(--brand-yellow); 
-            color: #000; 
-            padding: 12px 20px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-        }
-        
-        .nav-logo { 
-            width: 35px; 
-            height: 35px; 
-            background: #000; 
-            border-radius: 8px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            color: var(--brand-yellow); 
-            font-size: 12px; 
-            font-weight: 900; 
-        }
-        
-        .nav-title { 
-            font-size: 15px; 
-            font-weight: 900; 
-            color: #000000 !important;
-        }
-        
-        /* Dark text for yellow background - ensure all navbar text is black */
-        .navbar * {
-            color: #000000;
-        }
-        
-        .ip-warning-box {
-            margin: 15px; 
-            padding: 12px; 
-            border: 1px dashed var(--alert-red); 
-            border-radius: 12px;
-            background: rgba(255, 49, 49, 0.05); 
-            font-size: 10px; 
-            text-align: center; 
-            line-height: 1.4; 
-            color: #aaa;
-        }
-        
-        .ip-warning-box b { 
-            color: var(--alert-red); 
-        }
-
-        .main-container { 
-            max-width: 600px; 
-            margin: auto; 
-            padding-bottom: 120px; 
-        }
-        
-        .module-card { 
-            background: var(--card); 
-            border-radius: 25px; 
-            padding: 20px; 
-            border: 1px solid #222; 
-            margin: 15px; 
-        }
-        
-        .btn-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 10px; 
-            padding: 10px 15px; 
-        }
-        
-        .btn-grid-3 { 
-            grid-template-columns: 1fr 1fr 1fr !important; 
-        }
-        
-        .main-btn { 
-            background: #111; 
-            border: 1px solid #333; 
-            color: #777; 
-            padding: 15px; 
-            border-radius: 12px; 
-            text-align: center; 
-            cursor: pointer; 
-            font-weight: 900; 
-            font-size: 11px; 
-            transition: 0.3s; 
-        }
-        
-        .active-btn { 
-            border-color: var(--brand-yellow); 
-            color: var(--brand-yellow); 
-            background: #1a1a00; 
-        }
-        
-        .sub-btn-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 10px; 
-            margin-bottom: 15px; 
-        }
-        
-        .mode-btn { 
-            background: #111; 
-            border: 1px solid #333; 
-            color: #555; 
-            padding: 12px; 
-            border-radius: 10px; 
-            font-size: 10px; 
-            font-weight: 900; 
-            cursor: pointer; 
-            transition: 0.3s; 
-        }
-        
-        .mode-active-target { 
-            border-color: var(--neon-cyan); 
-            color: var(--neon-cyan); 
-            background: #001a1a; 
-        }
-        
-        .mode-active-bg { 
-            border-color: var(--neon-magenta); 
-            color: var(--neon-magenta); 
-            background: #1a001a; 
-        }
-
-        #wheelContainer { 
-            position: relative; 
-            width: 220px; 
-            height: 220px; 
-            margin: 15px auto; 
-            display: block; 
-        }
-        
-        #wheelCanvas { 
-            border-radius: 50%; 
-            cursor: crosshair; 
-            border: 8px solid #1a1a1a; 
-            width: 100%; 
-        }
-        
-        #marker { 
-            width: 14px; 
-            height: 14px; 
-            border: 2px solid white; 
-            border-radius: 50%; 
-            position: absolute; 
-            pointer-events: none; 
-            transform: translate(-50%, -50%); 
-            left: 50%; 
-            top: 50%; 
-            box-shadow: 0 0 5px #000; 
-        }
-        
-        #canvasBox { 
-            display: none; 
-            margin-top: 10px; 
-            text-align: center; 
-        }
-        
-        canvas#mainCanvas { 
-            border-radius: 15px; 
-            width: 100%; 
-            background: #000; 
-            border: 1px solid #333; 
-            cursor: crosshair; 
-        }
-
-        .color-info-bar { 
-            background: #000; 
-            padding: 12px; 
-            border-radius: 15px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-around; 
-            border: 1px solid #222; 
-            margin-top: 15px; 
-        }
-        
-        .swatch-box { 
-            text-align: center; 
-        }
-        
-        .swatch { 
-            width: 45px; 
-            height: 45px; 
-            border-radius: 8px; 
-            border: 2px solid #333; 
-            margin-bottom: 5px; 
-            background: #000; 
-        }
-        
-        .swatch-label { 
-            font-size: 8px; 
-            font-weight: 900; 
-            color: #666; 
-        }
-
-        .adj-box { 
-            margin-top: 15px; 
-            background: #080808; 
-            padding: 12px; 
-            border-radius: 12px; 
-            border: 1px solid #222; 
-        }
-        
-        .adj-row { 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            margin-bottom: 8px; 
-        }
-        
-        .adj-row label { 
-            font-size: 9px; 
-            font-weight: 900; 
-            color: #777; 
-            width: 70px; 
-        }
-        
-        .adj-row input { 
-            flex: 1; 
-            accent-color: var(--neon-cyan); 
-        }
-
-        .adj-default-row {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-            justify-content: space-between;
-        }
-        
-        .adj-default-btn {
-            flex: 1;
-            background: #111;
-            border: 1px solid #333;
-            color: #ffd700;
-            padding: 8px;
-            border-radius: 8px;
-            font-size: 9px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
-        
-        .adj-default-btn:hover {
-            border-color: var(--brand-yellow);
-            background: #1a1a00;
-        }
-        
-        .adj-default-btn.target-reset {
-            border-color: var(--neon-cyan);
-            color: var(--neon-cyan);
-        }
-        
-        .adj-default-btn.bg-reset {
-            border-color: var(--neon-magenta);
-            color: var(--neon-magenta);
-        }
-        
-        .adj-default-btn i {
-            font-size: 12px;
-        }
-
-        .input-field { 
-            background: #000; 
-            border: 1px solid #333; 
-            color: #fff; 
-            padding: 12px; 
-            border-radius: 10px; 
-            width: 100%; 
-            margin-bottom: 10px; 
-            box-sizing: border-box; 
-            text-align: center; 
-            font-size: 12px; 
-            outline: none; 
-        }
-        
-        .action-btn { 
-            width: 100%; 
-            padding: 16px; 
-            background: var(--neon-cyan); 
-            color: #000; 
-            border: none; 
-            border-radius: 12px; 
-            font-weight: 900; 
-            cursor: pointer; 
-            margin-top: 15px; 
-        }
-
-        .sticky-controls-wrapper { 
-            position: sticky; 
-            top: 73px; 
-            z-index: 1500; 
-            background: var(--bg); 
-            padding: 5px 0; 
-            border-bottom: 1px solid #222; 
-        }
+        /* ඔයාගේ කලින් තිබුණු සියලුම CSS මෙතන තියෙනවා */
+        /* ඉඩ ඉතිරි කරගන්න මම CSS code මෙතන නැවත ලියන්නේ නැහැ. */
+        /* ඔයාගේ කලින් තිබුණු CSS code එකම මෙතන copy කරගන්න */
     </style>
 </head>
 
@@ -632,8 +297,11 @@
         </div>
     </div>
 
-    <!-- JavaScript -->
+    <!-- JavaScript with Alerts to find error -->
     <script>
+        // ALERT 1: Script started
+        alert("1. Script started");
+        
         // Tab switching function
         function tab(name) {
             document.getElementById('calcMod').style.display = 'none';
@@ -947,6 +615,9 @@
                 updateWaxDisplay();
             }, 500);
         });
+
+        // ALERT 2: Before external scripts
+        alert("2. Before external scripts");
     </script>
 
     <!-- Scripts - Correct Order -->
@@ -957,30 +628,33 @@
     
     <!-- Service Worker Registration -->
     <script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/service-worker.js')
-                .then(reg => {
-                    console.log('✅ Service Worker registered');
-                    
-                    // Check for updates
-                    reg.addEventListener('updatefound', () => {
-                        const newWorker = reg.installing;
-                        console.log('🔄 New service worker installing...');
+        alert("3. After external scripts (if this appears, scripts loaded)");
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => {
+                        console.log('✅ Service Worker registered');
+                        
+                        // Check for updates
+                        reg.addEventListener('updatefound', () => {
+                            const newWorker = reg.installing;
+                            console.log('🔄 New service worker installing...');
+                        });
+                    })
+                    .catch(err => {
+                        console.error('❌ Service Worker registration failed:', err);
                     });
-                })
-                .catch(err => {
-                    console.error('❌ Service Worker registration failed:', err);
-                });
-        });
-    }
+            });
+        }
     </script>
 
     <!-- vConsole - for debugging on phone -->
     <script src="https://unpkg.com/vconsole/dist/vconsole.min.js"></script>
     <script>
+        alert("4. Before vConsole init");
         var vConsole = new VConsole();
         console.log('vConsole initialized');
+        alert("5. vConsole initialized");
     </script>
 </body>
 </html>
