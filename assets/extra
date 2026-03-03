@@ -1,0 +1,168 @@
+// --- BathiXen Pro: Core Application Logic ---
+let allDyes = [];
+let dyeSettings = JSON.parse(localStorage.getItem('bathiXen_dye_settings')) || {};
+
+// 1. කලින් index.html හි තිබූ Global Variables මෙහිදී පාලනය වේ
+window.baseRGB = null;
+window.bgBaseRGB = [255, 255, 255];
+window.bgFinalRGB = [255, 255, 255];
+
+// --- 2. Inventory & Tabs Logic ---
+const depreciationItems = ["Washing Machine Depre.", "Dyeing Bath Depre.", "Spoons & Bottles", "Furniture & Tables"];
+const auxiliaries = {
+    "WAX": ["Paraffin Wax", "Bee Wax", "Omini Wax", "Rosin", "Apex Wax"],
+    "CHEMICALS": ["Soda Ash", "Glauber's Salt", "Soaping Agent", "Urea"],
+    "UTILITIES": ["Water", "Firewood (Dara)", "Electricity", "Labour Cost", "Transport"]
+};
+
+// Tabs මාරු කිරීම
+window.switchTab = function(tabId, btn) {
+    document.querySelectorAll('.tab-view').forEach(t => t.style.display = 'none');
+    document.querySelectorAll('.nav-btn').forEach(b => {
+        b.style.background = '#222'; b.style.color = '#fff';
+    });
+    document.getElementById(tabId).style.display = 'block';
+    btn.style.background = '#ffd700'; btn.style.color = '#000';
+};
+
+// පරණ index.html හි තිබූ tab('calc') ශ්‍රිතය වෙනුවට මෙය ක්‍රියා කරයි
+window.tab = function(m) {
+    document.getElementById('calcMod').style.display = m==='calc'?'block':'none';
+    document.getElementById('storeMod').style.display = m==='store'?'block':'none';
+    document.getElementById('saveBar').style.display = m==='store'?'block':'none';
+    document.getElementById('b1').classList.toggle('active-btn', m==='calc');
+    document.getElementById('b2').classList.toggle('active-btn', m==='store');
+    if(m === 'store') renderInventory();
+};
+
+// --- 3. Recipe Generation (The Core Logic) ---
+window.process = function() {
+    const fab = document.getElementById('fabric').value;
+    const wgt = parseFloat(document.getElementById('weight').value);
+    const wax = parseFloat(document.getElementById('waxPercent').value || 0);
+    const msg = document.getElementById('statusMsg');
+    const recipeDisplay = document.getElementById('recipeDisplay');
+
+    const currentRGBStr = document.getElementById('finalRGBInput').value;
+    const currentRGBArray = currentRGBStr.split(',').map(Number);
+
+    msg.style.display = 'block';
+    if (!fab || !wgt) {
+        msg.style.background = 'rgba(255,0,0,0.2)';
+        msg.style.color = '#ff9999';
+        msg.innerHTML = "කරුණාකර රෙදි වර්ගය සහ බර ඇතුළත් කරන්න!";
+        return;
+    }
+
+    msg.style.background = 'rgba(0,255,0,0.1)';
+    msg.style.color = '#39ff14';
+    msg.innerHTML = `SUCCESS: RECIPE GENERATING...`;
+
+    // මෙහිදී අපේ Calculator Engine එක Call කරයි
+    generateRecipeReport(currentRGBArray, fab, wgt, wax);
+};
+
+// සැබෑ ගණනය කිරීම් සිදුවන ස්ථානය
+function generateRecipeReport(rgb, fab, wgt, wax) {
+    const savedStores = JSON.parse(localStorage.getItem('bathiXen_dye_settings')) || {};
+    let html = `<div style="padding:15px; background:#111; border-radius:10px; border:1px solid #333;">
+                <h3 style="color:#ffd700; margin-top:0;">Production Report</h3>`;
+    
+    // දළ ගණනය කිරීම් (ඔබේ ව්‍යාපාරික අවශ්‍යතා මත මේවා වෙනස් කළ හැක)
+    const dyeAmount = (wgt * 0.03).toFixed(2); // 3% shade
+    const saltAmount = (wgt * 0.06).toFixed(2); // 60g per kg
+    const sodaAmount = (wgt * 0.02).toFixed(2); // 20g per kg
+
+    html += `<table style="width:100%; font-size:12px; border-collapse:collapse;">
+                <tr style="border-bottom:1px solid #333;"><td style="padding:5px;">Fabric Weight</td><td align="right">${wgt}g</td></tr>
+                <tr style="border-bottom:1px solid #333;"><td style="padding:5px;">Est. Dye Qty</td><td align="right">${dyeAmount}g</td></tr>
+                <tr style="border-bottom:1px solid #333;"><td style="padding:5px;">G. Salt</td><td align="right">${saltAmount}g</td></tr>
+                <tr style="border-bottom:1px solid #333;"><td style="padding:5px;">Soda Ash</td><td align="right">${sodaAmount}g</td></tr>
+            </table>`;
+
+    // පිරිවැය ගණනය (Inventory එකෙන් මිල ගණන් ගනී)
+    const fabPrice = parseFloat(savedStores[fab]?.price || 0);
+    const cost = (wgt / 1000) * fabPrice; // මෙහිදී මිල ගණන් ඒකක පරීක්ෂා කරන්න
+
+    html += `<div style="margin-top:15px; padding:10px; background:#222; border-radius:5px; text-align:center;">
+                <span style="font-size:10px; color:#aaa;">ESTIMATED TOTAL COST</span><br>
+                <span style="font-size:18px; color:#39ff14; font-weight:bold;">Rs. ${cost.toFixed(2)}</span>
+             </div>`;
+    
+    html += `</div>`;
+    document.getElementById('recipeDisplay').innerHTML = html;
+}
+
+// --- 4. Inventory Rendering (JSON based) ---
+function renderInventory() {
+    const storeMod = document.getElementById('storeMod');
+    storeMod.innerHTML = `
+        <div style="display:flex; gap:5px; margin-bottom:15px; overflow-x:auto; padding:5px;">
+            <button class="nav-btn" onclick="window.switchTab('v-dyes', this)" style="background:#ffd700; color:#000;">DYES</button>
+            <button class="nav-btn" onclick="window.switchTab('v-wax', this)">WAX</button>
+            <button class="nav-btn" onclick="window.switchTab('v-chem', this)">CHEM</button>
+            <button class="nav-btn" onclick="window.switchTab('v-util', this)">UTIL</button>
+            <button class="nav-btn" onclick="window.switchTab('v-depre', this)">DEPRE</button>
+        </div>
+        <div id="v-dyes" class="tab-view" style="display:block;">${renderDyeGrid()}</div>
+        <div id="v-wax" class="tab-view" style="display:none;">${renderSimpleList(auxiliaries.WAX, "Rs/kg")}</div>
+        <div id="v-chem" class="tab-view" style="display:none;">${renderSimpleList(auxiliaries.CHEMICALS, "Rs/kg")}</div>
+        <div id="v-util" class="tab-view" style="display:none;">${renderSimpleList(auxiliaries.UTILITIES, "Rs/Unit")}</div>
+        <div id="v-depre" class="tab-view" style="display:none;">${renderSimpleList(depreciationItems, "Rs/Yard")}</div>
+    `;
+}
+
+function renderDyeGrid() {
+    return `<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap:10px;">
+        ${allDyes.map(d => {
+            const saved = dyeSettings[d.name] || { available: false, price: "" };
+            return `
+                <div class="dye-box" style="background:#161616; padding:8px; border-radius:8px; text-align:center; border:1px solid #222;">
+                    <div style="width:30px; height:30px; border-radius:50%; margin:0 auto 5px; background:rgb(${d.r},${d.g},${d.b}); border:1px solid #444;"></div>
+                    <div class="item-name" style="font-size:0.6rem; color:#eee; margin-bottom:5px;">${d.name}</div>
+                    <input type="checkbox" class="data-check" ${saved.available ? 'checked' : ''}>
+                    <input type="number" class="price-input" value="${saved.price}" placeholder="0" style="width:100%; background:#000; color:#ffd700; border:1px solid #444; text-align:center; font-size:10px; padding:4px; border-radius:4px;">
+                </div>`;
+        }).join('')}
+    </div>`;
+}
+
+function renderSimpleList(list, unit) {
+    return list.map(item => {
+        const saved = dyeSettings[item] || { available: false, price: "" };
+        return `
+            <div class="item-card" style="display:flex; align-items:center; background:#161616; padding:10px; margin-bottom:5px; border-radius:8px; border:1px solid #222;">
+                <input type="checkbox" class="data-check" ${saved.available ? 'checked' : ''}>
+                <div class="item-name" style="flex:1; color:#eee; font-size:12px; margin-left:10px;">${item}</div>
+                <input type="number" class="price-input" value="${saved.price}" placeholder="0" style="width:70px; background:#000; color:#39ff14; border:1px solid #444; padding:5px; text-align:center; border-radius:4px;">
+                <span style="font-size:9px; color:#666; margin-left:5px;">${unit}</span>
+            </div>`;
+    }).join('');
+}
+
+// දත්ත සුරැකීම
+window.saveData = function() {
+    const checks = document.querySelectorAll('.data-check');
+    let data = {};
+    checks.forEach(c => {
+        const parent = c.closest('.item-card') || c.closest('.dye-box');
+        const price = parent.querySelector('.price-input').value;
+        const name = parent.querySelector('.item-name').innerText.trim();
+        data[name] = { available: c.checked, price: price };
+    });
+    dyeSettings = data;
+    localStorage.setItem('bathiXen_dye_settings', JSON.stringify(data));
+    alert("සියලු දත්ත සාර්ථකව සුරැකුණා!");
+};
+
+// --- 5. App Initialization ---
+async function initApp() {
+    try {
+        const res = await fetch('./js/codex_dyes.json');
+        allDyes = await res.json();
+        console.log("System Ready: Dyes Loaded.");
+        if(typeof drawWheel === 'function') drawWheel();
+    } catch (err) { console.error("Initialization failed:", err); }
+}
+
+initApp();

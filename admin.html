@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BathiXen Pro - Admin Panel</title>
+    <style>
+        body { background: #0b0f19; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .admin-box { background: #161b22; padding: 30px; border-radius: 15px; border: 1px solid #00e5ff; width: 350px; text-align: center; box-shadow: 0 0 20px rgba(0, 229, 255, 0.1); }
+        h2 { color: #00e5ff; margin-bottom: 20px; text-transform: uppercase; }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #0d1117; border: 1px solid #30363d; color: white; border-radius: 8px; box-sizing: border-box; outline: none; }
+        .btn { width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; background: #00e5ff; color: #000; transition: 0.3s; }
+        .btn:hover { background: #00b8cc; }
+        #keyDisplay { background: #0d1117; padding: 15px; margin-top: 20px; border: 1px dashed #00e5ff; border-radius: 8px; display: none; text-align: left; }
+        #fullMessage { font-size: 13px; line-height: 1.5; white-space: pre-wrap; color: #c9d1d9; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-box">
+        <h2>BATHIXEN ADMIN</h2>
+        <p style="font-size: 12px; color: #8b949e;">පරිශීලකයාගේ Email එක:</p>
+        <input type="email" id="userEmail" placeholder="bathixen@gmail.com">
+        
+        <button class="btn" onclick="generateAndSaveKey()">🔑 Access Key එක සාදන්න</button>
+
+        <div id="keyDisplay">
+            <div id="fullMessage"></div>
+            <p style="font-size: 10px; color: #555; margin-top: 10px;">මෙම තොරතුරු ලොගින් වීමට භාවිතා කරන්න.</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { db, auth } from './js/firebase-init.js';
+        import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Firebase සම්බන්ධතාවය පරීක්ෂාව
+        signInAnonymously(auth).catch(e => console.error("සම්බන්ධතා දෝෂය:", e));
+
+        window.generateAndSaveKey = async function() {
+            const rawEmail = document.getElementById('userEmail').value;
+            const emailInput = rawEmail.trim().toLowerCase(); // හිස්තැන් මකා කුඩා අකුරු කරයි
+
+            if(!emailInput) { alert("ඊමේල් එක ඇතුළත් කරන්න!"); return; }
+            
+            // අහඹු Key එකක් සෑදීම
+            const tempKey = "BX-" + Math.floor(100000 + Math.random() * 900000);
+            const expiry = Date.now() + (60 * 60 * 1000); // පැය 1ක්
+
+            try {
+                // දත්ත ගබඩාවට (Firestore) යැවීම
+                const docRef = doc(db, "temporary_keys", emailInput);
+                
+                await setDoc(docRef, {
+                    temp_passkey: tempKey, // මෙම Field එක දැන් අනිවාර්යයෙන්ම සේව් වේ
+                    expiry_time: expiry
+                });
+
+                console.log("Data saved for:", emailInput);
+
+                const msg = `⚠️ *BATHIXEN PRO ACCESS*\n\n📧 Email: ${emailInput}\n🔑 Key: ${tempKey}\n⏳ වලංගු කාලය: මිනිත්තු 60 කි.`;
+                
+                document.getElementById('fullMessage').innerText = msg;
+                document.getElementById('keyDisplay').style.display = 'block';
+                
+            } catch (error) {
+                console.error(error);
+                alert("දෝෂයක්: " + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BathiXen Pro - Secure Login</title>
+    <style>
+        :root {
+            --primary: #00e5ff;
+            --secondary: #ff4081;
+            --bg: #0a0e14;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at center, #1a2a3a 0%, var(--bg) 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .login-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            margin-bottom: 10px;
+            color: var(--primary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        p {
+            font-size: 14px;
+            color: #ccc;
+            margin-bottom: 25px;
+        }
+
+        #errorMessage {
+            height: 20px;
+            font-size: 13px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #loginButton {
+            background: linear-gradient(45deg, #00b8d4, #00e5ff);
+            color: #000;
+        }
+
+        #verifyButton {
+            background: linear-gradient(45deg, #f50057, #ff4081);
+            color: white;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            filter: brightness(1.1);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <h2>BATHIXEN</h2>
+        <p>Advanced Security Protocol</p>
+        
+        <div id="errorMessage"></div>
+
+        <div id="loginForm" class="fade-in">
+            <div class="input-group">
+                <label>Authorized Email</label>
+                <input type="email" id="email" placeholder="example@gmail.com" required>
+            </div>
+            <button id="loginButton" type="button">AUTHENTICATE & SEND OTP</button>
+        </div>
+
+        <div id="otpSection" class="fade-in" style="display: none;">
+            <div class="input-group">
+                <label>WhatsApp Security Code</label>
+                <input type="number" id="otpInput" placeholder="Enter 6-digit OTP">
+            </div>
+            <button id="verifyButton" type="button">VERIFY & DECRYPT</button>
+            <p style="margin-top: 15px; font-size: 11px; color: #aaa;">
+                කරුණාකර ඔබගේ WhatsApp වෙත ලැබුණු පණිවිඩය Send කර එහි ඇති අංකය මෙහි ඇතුළත් කරන්න.
+            </p>
+        </div>
+    </div>
+
+    <script type="module" src="js/auth.js"></script>
+
+</body

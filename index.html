@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BathiXen Master - ThirdVisionPlus Engineering</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <style>
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .fade-out {
+            opacity: 0 !important;
+            transition: opacity 0.8s ease-in-out;
+            pointer-events: none;
+        }
+
+        :root {
+            --neon-cyan: #0ff;
+            --neon-magenta: #ff00ff;
+            --neon-green: #39ff14;
+            --bg: #050505;
+            --card: #111;
+            --brand-yellow: #ffff00;
+            --alert-red: #ff3131;
+        }
+
+        body { 
+            background: var(--bg); 
+            color: #fff; 
+            font-family: 'Segoe UI', sans-serif; 
+            margin: 0; 
+            overflow-x: hidden; 
+        }
+        
+        /* Navigation */
+        .sticky-top { 
+            position: sticky; 
+            top: 0; 
+            z-index: 2000; 
+            background: var(--bg); 
+        }
+        
+        .navbar { 
+            background: var(--brand-yellow); 
+            color: #000; 
+            padding: 12px 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+        }
+        
+        .nav-logo { 
+            width: 35px; 
+            height: 35px; 
+            background: #000; 
+            border-radius: 8px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: var(--brand-yellow); 
+            font-size: 12px; 
+            font-weight: 900; 
+        }
+        
+        .nav-title { 
+            font-size: 15px; 
+            font-weight: 900; 
+            color: #000000 !important;
+        }
+        
+        /* Dark text for yellow background - ensure all navbar text is black */
+        .navbar * {
+            color: #000000;
+        }
+        
+        .ip-warning-box {
+            margin: 15px; 
+            padding: 12px; 
+            border: 1px dashed var(--alert-red); 
+            border-radius: 12px;
+            background: rgba(255, 49, 49, 0.05); 
+            font-size: 10px; 
+            text-align: center; 
+            line-height: 1.4; 
+            color: #aaa;
+        }
+        
+        .ip-warning-box b { 
+            color: var(--alert-red); 
+        }
+
+        .main-container { 
+            max-width: 600px; 
+            margin: auto; 
+            padding-bottom: 120px; 
+        }
+        
+        .module-card { 
+            background: var(--card); 
+            border-radius: 25px; 
+            padding: 20px; 
+            border: 1px solid #222; 
+            margin: 15px; 
+        }
+        
+        .btn-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 10px; 
+            padding: 10px 15px; 
+        }
+        
+        .btn-grid-3 { 
+            grid-template-columns: 1fr 1fr 1fr !important; 
+        }
+        
+        .main-btn { 
+            background: #111; 
+            border: 1px solid #333; 
+            color: #777; 
+            padding: 15px; 
+            border-radius: 12px; 
+            text-align: center; 
+            cursor: pointer; 
+            font-weight: 900; 
+            font-size: 11px; 
+            transition: 0.3s; 
+        }
+        
+        .active-btn { 
+            border-color: var(--brand-yellow); 
+            color: var(--brand-yellow); 
+            background: #1a1a00; 
+        }
+        
+        .sub-btn-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 10px; 
+            margin-bottom: 15px; 
+        }
+        
+        .mode-btn { 
+            background: #111; 
+            border: 1px solid #333; 
+            color: #555; 
+            padding: 12px; 
+            border-radius: 10px; 
+            font-size: 10px; 
+            font-weight: 900; 
+            cursor: pointer; 
+            transition: 0.3s; 
+        }
+        
+        .mode-active-target { 
+            border-color: var(--neon-cyan); 
+            color: var(--neon-cyan); 
+            background: #001a1a; 
+        }
+        
+        .mode-active-bg { 
+            border-color: var(--neon-magenta); 
+            color: var(--neon-magenta); 
+            background: #1a001a; 
+        }
+
+        #wheelContainer { 
+            position: relative; 
+            width: 220px; 
+            height: 220px; 
+            margin: 15px auto; 
+            display: block; 
+        }
+        
+        #wheelCanvas { 
+            border-radius: 50%; 
+            cursor: crosshair; 
+            border: 8px solid #1a1a1a; 
+            width: 100%; 
+        }
+        
+        #marker { 
+            width: 14px; 
+            height: 14px; 
+            border: 2px solid white; 
+            border-radius: 50%; 
+            position: absolute; 
+            pointer-events: none; 
+            transform: translate(-50%, -50%); 
+            left: 50%; 
+            top: 50%; 
+            box-shadow: 0 0 5px #000; 
+        }
+        
+        #canvasBox { 
+            display: none; 
+            margin-top: 10px; 
+            text-align: center; 
+        }
+        
+        canvas#mainCanvas { 
+            border-radius: 15px; 
+            width: 100%; 
+            background: #000; 
+            border: 1px solid #333; 
+            cursor: crosshair; 
+        }
+
+        .color-info-bar { 
+            background: #000; 
+            padding: 12px; 
+            border-radius: 15px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-around; 
+            border: 1px solid #222; 
+            margin-top: 15px; 
+        }
+        
+        .swatch-box { 
+            text-align: center; 
+        }
+        
+        .swatch { 
+            width: 45px; 
+            height: 45px; 
+            border-radius: 8px; 
+            border: 2px solid #333; 
+            margin-bottom: 5px; 
+            background: #000; 
+        }
+        
+        .swatch-label { 
+            font-size: 8px; 
+            font-weight: 900; 
+            color: #666; 
+        }
+
+        .adj-box { 
+            margin-top: 15px; 
+            background: #080808; 
+            padding: 12px; 
+            border-radius: 12px; 
+            border: 1px solid #222; 
+        }
+        
+        .adj-row { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            margin-bottom: 8px; 
+        }
+        
+        .adj-row label { 
+            font-size: 9px; 
+            font-weight: 900; 
+            color: #777; 
+            width: 70px; 
+        }
+        
+        .adj-row input { 
+            flex: 1; 
+            accent-color: var(--neon-cyan); 
+        }
+
+        .adj-default-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            justify-content: space-between;
+        }
+        
+        .adj-default-btn {
+            flex: 1;
+            background: #111;
+            border: 1px solid #333;
+            color: #ffd700;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 9px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        
+        .adj-default-btn:hover {
+            border-color: var(--brand-yellow);
+            background: #1a1a00;
+        }
+        
+        .adj-default-btn.target-reset {
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+        }
+        
+        .adj-default-btn.bg-reset {
+            border-color: var(--neon-magenta);
+            color: var(--neon-magenta);
+        }
+        
+        .adj-default-btn i {
+            font-size: 12px;
+        }
+
+        .input-field { 
+            background: #000; 
+            border: 1px solid #333; 
+            color: #fff; 
+            padding: 12px; 
+            border-radius: 10px; 
+            width: 100%; 
+            margin-bottom: 10px; 
+            box-sizing: border-box; 
+            text-align: center; 
+            font-size: 12px; 
+            outline: none; 
+        }
+        
+        .action-btn { 
+            width: 100%; 
+            padding: 16px; 
+            background: var(--neon-cyan); 
+            color: #000; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: 900; 
+            cursor: pointer; 
+            margin-top: 15px; 
+        }
+
+        .sticky-controls-wrapper { 
+            position: sticky; 
+            top: 73px; 
+            z-index: 1500; 
+            background: var(--bg); 
+            padding: 5px 0; 
+            border-bottom: 1px solid #222; 
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Splash Screen -->
+    <div id="splash-screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#050505; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div class="nav-logo" style="width:80px; height:80px; font-size:24px; margin-bottom:20px; box-shadow: 0 0 20px var(--brand-yellow); animation: pulse 2s infinite;">TVP</div>
+        <h1 style="color:var(--brand-yellow); font-size:18px; letter-spacing:4px; font-weight:900;">BATHIXEN MASTER</h1>
+        <p style="color:#555; font-size:10px; margin-top:10px; letter-spacing:2px;">THIRDVISIONPLUS ENGINEERING</p>
+        <div style="width:100px; height:2px; background:#111; margin-top:20px; overflow:hidden;">
+            <div id="splash-loader" style="width:0%; height:100%; background:var(--brand-yellow); transition: 1.5s ease-in-out;"></div>
+        </div>
+    </div>
+
+    <!-- Sticky Header -->
+    <div class="sticky-top">
+        <header class="navbar">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <img src="assets/logo.png" alt="TVP Logo" style="width:80px; height:80px; border-radius: 15px; margin-bottom:20px; box-shadow: 0 0 20px var(--brand-yellow); animation: pulse 2s infinite; object-fit: cover;">
+                <div class="nav-title">BathiXen Master</div>
+            </div>
+            <button onclick="logout()" style="background:#000; color:var(--brand-yellow); border:none; padding:8px; border-radius:50%;">✕</button>
+        </header>
+        
+        <!-- User Info Bar -->
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 4px 15px; background: #000; border-bottom: 1px solid #222;">
+            <div id="user-info-display" style="display: flex; align-items: center; gap: 6px;">
+                <div style="width: 6px; height: 6px; background: #39ff14; border-radius: 50%; box-shadow: 0 0 5px #39ff14;"></div>
+                <span style="color: #39ff14; font-size: 10px; font-weight: bold;">Loading User...</span>
+            </div>
+            <div style="color: #555; font-size: 8px; font-weight: 800; letter-spacing: 1px;">ENCRYPTED ACCESS</div>
+        </div>
+
+        <!-- Sticky Inventory Tabs -->
+        <div id="stickyInventoryTabs" style="display:none; background: #050505; padding: 10px; border-bottom: 1px solid #222;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                <button class="mode-btn mode-active-target" onclick="filterStore('dyes')" style="padding: 8px; font-size: 9px;">DYES</button>
+                <button class="mode-btn" onclick="filterStore('fabrics')" style="padding: 8px; font-size: 9px;">FABRICS</button>
+                <button class="mode-btn" onclick="filterStore('chemicals')" style="padding: 8px; font-size: 9px;">CHEMICALS</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- IP Warning -->
+        <div class="ip-warning-box">
+            <b>බුද්ධිමය දේපල ආරක්ෂණ නිවේදනය:</b><br>
+            මෙම පද්ධතිය සහ එහි ඇල්ගොරිතම 2003 අංක 36 දරන ශ්‍රී ලංකා බුද්ධිමය දේපල පනත යටතේ ආරක්ෂිත <b>ThirdVisionPlus Engineering</b> සතු දේපලකි.
+        </div>
+
+        <!-- Methodology Selector -->
+        <div style="padding: 0 15px 5px 15px;">
+            <h4 style="color:#666; font-size:9px; margin-bottom:8px; letter-spacing:1px; text-align:center;">CHOOSE PRODUCTION METHODOLOGY</h4>
+            <select id="methodSelector" class="input-field" onchange="updateHeader()" style="border: 1px solid var(--brand-yellow); color: var(--brand-yellow); background: #1a1a00; font-weight: bold; margin-bottom: 5px;">
+                <option value="">-- SELECT PROCESS METHOD --</option>
+                <option value="Reactive Dyeing">01. Reactive Dyeing</option>
+                <option value="Vat Dyeing">02. Vat Dyeing</option>
+                <option value="Napthol Dyeing">03. Napthol Dyeing</option>
+                <option value="Eco Batik">04. Eco Batik</option>
+                <option value="Silk Batik">05. Silk Batik</option>
+                <option value="Java Lukis">06. Java Lukis</option>
+                <option value="Shibori Technique">07. Shibori Technique</option>
+                <option value="Tie Dye">08. Tie Dye</option>
+                <option value="Block Printing">09. Block Printing</option>
+                <option value="Screen Printing">10. Screen Printing</option>
+                <option value="Spray Dyeing">11. Spray Dyeing</option>
+                <option value="Ombre Dyeing">12. Ombre/Gradient</option>
+                <option value="Pigment Printing">13. Pigment Printing</option>
+                <option value="Ice Dyeing">14. Ice Dyeing (Viral)</option>
+                <option value="Cyanotype Art">15. Cyanotype (Sun Printing)</option>
+            </select>
+        </div>
+
+        <!-- Sticky Controls Wrapper -->
+        <div class="sticky-controls-wrapper">
+            <!-- Main Navigation -->
+            <div id="main-nav-grid" class="btn-grid btn-grid-3">
+                <div id="b1" class="main-btn active-btn" onclick="tab('calc')">HSOP CALCULATOR</div>
+                <div id="b2" class="main-btn" onclick="tab('store')">YOUR STORES</div>
+                <div id="bAdmin" class="main-btn" onclick="tab('admin')" style="display:none; border-color: var(--neon-green); color: var(--neon-green);">USER MANAGEMENT</div>
+            </div>
+            
+            <!-- Mode Toggle -->
+            <div id="modeToggleGroup" class="btn-grid" style="padding-top: 0;">
+                <div id="targetModeBtn" class="mode-btn mode-active-target" onclick="setMode('target')">TARGET COLOUR</div>
+                <div id="bgModeBtn" class="mode-btn" onclick="setMode('bg')">BACKGROUND COLOUR</div>
+            </div>
+        </div>
+
+        <!-- Calculator Module -->
+        <div id="calcMod" class="module-card">
+            <!-- Image/Color Wheel Buttons -->
+            <div class="sub-btn-grid">
+                <button onclick="showImg()" style="background:#1a1a1a; color:#fff; border:1px solid #333; padding:10px; border-radius:8px; font-size:10px; font-weight:bold;">IMAGE PICKER</button>
+                <button onclick="showWheel()" style="background:#1a1a1a; color:#fff; border:1px solid #333; padding:10px; border-radius:8px; font-size:10px; font-weight:bold;">COLOR WHEEL</button>
+            </div>
+            
+            <!-- File Input -->
+            <input type="file" id="fileIn" accept="image/*" style="display:none" onchange="handleImg(this)">
+            
+            <!-- Color Wheel -->
+            <div id="wheelContainer">
+                <canvas id="wheelCanvas" width="220" height="220" onmousedown="pickW(event)" onmousemove="pickW(event)"></canvas>
+                <div id="marker"></div>
+            </div>
+            
+            <!-- Canvas Box -->
+            <div id="canvasBox">
+                <canvas id="mainCanvas" onmousedown="pickC(event)" onmousemove="pickC(event)"></canvas>
+            </div>
+
+            <!-- Color Info Bar -->
+            <div class="color-info-bar">
+                <div class="swatch-box">
+                    <div id="targetSwatch" class="swatch" style="background: #000; border-color: var(--neon-cyan);"></div>
+                    <div class="swatch-label">TARGET RGB</div>
+                    <div id="targetRGBDisp" style="font-size:9px; color:var(--neon-cyan);">0, 0, 0</div>
+                </div>
+                <div style="width:1px; height:40px; background:#222;"></div>
+                <div class="swatch-box">
+                    <div id="bgSwatch" class="swatch" style="background: #fff; border-color: var(--neon-magenta);"></div>
+                    <div class="swatch-label">BACKGRND RGB</div>
+                    <div id="bgRGBDisp" style="font-size:9px; color:var(--neon-magenta);">255, 255, 255</div>
+                </div>
+            </div>
+
+            <!-- Adjustment Box -->
+            <div class="adj-box">
+                <div class="adj-row">
+                    <label>BRIGHTNESS</label>
+                    <input type="range" id="bright" min="-100" max="100" value="0" oninput="applyAdj()">
+                </div>
+                <div class="adj-row">
+                    <label>SATURATION</label>
+                    <input type="range" id="sat" min="-100" max="100" value="0" oninput="applyAdj()">
+                </div>
+                
+                <!-- Default Buttons -->
+                <div class="adj-default-row">
+                    <button class="adj-default-btn target-reset" onclick="resetTargetToDefault()">
+                        <span>🎯</span> TARGET DEFAULT
+                    </button>
+                    <button class="adj-default-btn bg-reset" onclick="resetBgToDefault()">
+                        <span>🖼️</span> BG DEFAULT
+                    </button>
+                </div>
+            </div>
+
+            <!-- Production Details -->
+            <h4 style="color:#666; font-size:9px; margin-top:20px; letter-spacing:1px; display: flex; align-items: center; gap: 5px;">
+                <span>📋 PRODUCTION DETAILS</span>
+                <span style="background: #ffd700; color: #000; padding: 2px 8px; border-radius: 12px; font-size: 8px; font-weight: bold;">WAX COVERAGE</span>
+            </h4>
+
+            <!-- Fabric Selection -->
+            <select id="fabric" class="input-field">
+                <option value="">SELECT FABRIC TYPE</option>
+            </select>
+
+            <!-- Weight Input -->
+            <div style="position: relative; margin-bottom: 10px;">
+                <input type="number" id="weight" class="input-field" placeholder="FABRIC WEIGHT (GMS)" style="padding-left: 35px;" oninput="updateWaxDisplay()">
+                <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #ffd700; font-size: 14px;">⚖️</span>
+            </div>
+
+            <!-- WAX COVERAGE SECTION -->
+            <div style="background: linear-gradient(145deg, #1a1a00 0%, #000 100%); border: 2px solid #ffd700; border-radius: 16px; padding: 15px; margin: 15px 0; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);">
+                
+                <!-- Header -->
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                    <div style="background: #ffd700; width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #000; font-size: 18px;">🕯️</div>
+                    <div>
+                        <div style="color: #ffd700; font-size: 14px; font-weight: bold;">WAX COVERAGE AREA</div>
+                        <div style="color: #888; font-size: 9px;">ඉටි ආවරණය කරපු ප්‍රදේශය % (Wax applied area)</div>
+                    </div>
+                </div>
+                
+                <!-- Slider -->
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <div style="background: #000; border: 1px solid #333; border-radius: 12px; padding: 5px 15px; display: flex; align-items: center; flex: 1;">
+                        <input type="range" id="waxSlider" min="0" max="100" value="50" style="flex: 1; height: 6px; accent-color: #ffd700;" oninput="updateWaxDisplay()">
+                        <span id="waxPercentDisplay" style="color: #ffd700; font-weight: bold; font-size: 18px; min-width: 45px; text-align: right;">50%</span>
+                    </div>
+                </div>
+                
+                <!-- Hidden Input -->
+                <input type="number" id="waxPercent" value="50" style="display: none;">
+                
+                <!-- Visual Bars -->
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+                    <div style="flex: 1; text-align: center;">
+                        <div style="background: linear-gradient(135deg, #888, #444); height: 20px; width: 0%; border-radius: 10px 0 0 10px;" id="waxAreaBar"></div>
+                        <div style="font-size: 9px; color: #888; margin-top: 5px;">🕯️ WAX AREA <span id="waxAreaPercent">50%</span></div>
+                    </div>
+                    
+                    <div style="flex: 1; text-align: center;">
+                        <div style="background: linear-gradient(135deg, #0ff, #39ff14); height: 20px; width: 0%; border-radius: 0 10px 10px 0;" id="dyeAreaBar"></div>
+                        <div style="font-size: 9px; color: #0ff; margin-top: 5px;">🎨 DYE AREA <span id="dyeAreaPercent">50%</span></div>
+                    </div>
+                </div>
+                
+                <!-- Wax Composition Selection - Omini Wax Technology -->
+                <div style="margin-top: 15px; background: #111; border-radius: 8px; padding: 12px;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                        <span style="color: #ffd700; font-size: 14px;">🧪 ඉටි මිශ්‍රණය තෝරන්න</span>
+                        <span style="background: #ffd700; color: #000; padding: 2px 8px; border-radius: 12px; font-size: 8px;">Omini Wax Technology</span>
+                    </div>
+                    <select id="waxCompositionSelect" class="input-field" style="border-color: #ffd700; color: #ffd700; background: #1a1a00;">
+                        <option value="standard">🏮 සම්මත මිශ්‍රණය (70% Paraffin, 20% Bee, 10% Omini)</option>
+                        <option value="high_covering">🔥 High Covering (60% Paraffin, 20% Bee, 20% Omini)</option>
+                        <option value="fine_lines">✨ සියුම් රේඛා (50% Paraffin, 15% Bee, 25% Omini, 10% Rosin)</option>
+                        <option value="eco_noboil">🌿 Eco No-Boil (80% Paraffin, 20% Rosin)</option>
+                    </select>
+                    <div id="waxDescription" style="font-size: 9px; color: #aaa; margin-top: 5px; padding: 4px; background: #000; border-radius: 4px;">
+                        45°C-50°C - හොඳින් ඉරිතැලීම්
+                    </div>
+                </div>
+                
+                <!-- Effective Weight Display -->
+                <div id="effectiveWeightContainer" style="margin-top: 15px; background: #1a1a1a; border-radius: 10px; padding: 12px; border: 1px solid #39ff14; display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <span style="color: #888; font-size: 10px;">🧮 EFFECTIVE WEIGHT FOR DYE CALCULATION:</span>
+                        <span id="effectiveWeightValue" style="color: #39ff14; font-weight: bold; font-size: 20px;">0g</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 9px; color: #666; border-top: 1px solid #333; padding-top: 5px;">
+                        <span>Wax-free area: <span id="waxFreeWeight">0g</span></span>
+                        <span>+</span>
+                        <span>Penetration (60%): <span id="penetrationWeight">0g</span></span>
+                    </div>
+                </div>
+                
+                <!-- Info Box -->
+                <div style="background: #111; border-radius: 8px; padding: 8px; margin-top: 10px; font-size: 9px; color: #888; display: flex; align-items: center; gap: 5px; border-left: 3px solid #ffd700;">
+                    <span style="color: #ffd700;">💡</span>
+                    <span>Wax cracks & edges allow <b style="color: #39ff14;">60%</b> dye penetration through wax area</span>
+                </div>
+                
+                <!-- Preset Buttons -->
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 10px;">
+                    <button onclick="setWaxCoverage(0)" style="background: #111; border: 1px solid #333; color: #888; padding: 5px; border-radius: 6px; font-size: 9px; cursor: pointer;">0%</button>
+                    <button onclick="setWaxCoverage(25)" style="background: #111; border: 1px solid #333; color: #888; padding: 5px; border-radius: 6px; font-size: 9px; cursor: pointer;">25%</button>
+                    <button onclick="setWaxCoverage(50)" style="background: #111; border: 1px solid #ffd700; color: #ffd700; padding: 5px; border-radius: 6px; font-size: 9px; cursor: pointer;">50%</button>
+                    <button onclick="setWaxCoverage(75)" style="background: #111; border: 1px solid #333; color: #888; padding: 5px; border-radius: 6px; font-size: 9px; cursor: pointer;">75%</button>
+                    <button onclick="setWaxCoverage(100)" style="grid-column: span 4; background: #111; border: 1px solid #ff3131; color: #ff3131; padding: 5px; border-radius: 6px; font-size: 9px; cursor: pointer; margin-top: 5px;">100% (FULL WAX - NO DYE)</button>
+                </div>
+            </div>
+
+            <!-- Generate Button -->
+            <button class="action-btn" onclick="processWithWax()" style="background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; font-weight: bold; margin-top: 5px;">
+                🎨 GENERATE RECIPE WITH WAX COVERAGE
+            </button>
+
+            <!-- Recipe Display -->
+            <div id="recipeDisplay"></div>
+        </div>
+
+        <!-- Store Module -->
+        <div id="storeMod" class="module-card" style="display:none">
+            <div id="inventoryContent">
+                <p style="text-align:center; color:#555; font-size:11px;">LOADING INVENTORY...</p>
+            </div>
+        </div>
+
+        <!-- Admin Module -->
+        <div id="adminMod" class="module-card" style="display:none">
+            <h3 style="color:var(--neon-green); font-size:14px; text-align:center; margin-bottom:20px;">USER MANAGEMENT SYSTEM</h3>
+            
+            <div style="background:#000; padding:15px; border-radius:12px; border:1px solid #333; margin-bottom:20px;">
+                <input type="text" id="reg-name" class="input-field" placeholder="Full Name">
+                <input type="email" id="reg-email" class="input-field" placeholder="User Email (Login ID)">
+                <input type="text" id="reg-whatsapp" class="input-field" placeholder="WhatsApp Number (+94...)">
+                <select id="reg-role" class="input-field" style="margin-top:5px; border-color:#333;">
+                    <option value="USER">ASSIGN ROLE: USER</option>
+                    <option value="ADMIN">ASSIGN ROLE: ADMIN</option>
+                </select>
+                <button class="action-btn" style="background:var(--neon-green); color:#000; margin-top:10px;" onclick="window.addNewUser()">REGISTER NEW USER</button>
+            </div>
+            
+            <div id="userListContainer">
+                <p style="text-align:center; color:#555; font-size:11px;">FETCHING REGISTERED USERS...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Tab switching function
+        function tab(name) {
+            document.getElementById('calcMod').style.display = 'none';
+            document.getElementById('storeMod').style.display = 'none';
+            document.getElementById('adminMod').style.display = 'none';
+            document.getElementById('stickyInventoryTabs').style.display = 'none';
+            document.getElementById('modeToggleGroup').style.display = 'none';
+            
+            document.getElementById('b1').classList.remove('active-btn');
+            document.getElementById('b2').classList.remove('active-btn');
+            document.getElementById('bAdmin').classList.remove('active-btn');
+
+            if (name === 'store') {
+                document.getElementById('storeMod').style.display = 'block';
+                document.getElementById('stickyInventoryTabs').style.display = 'block';
+                document.getElementById('b2').classList.add('active-btn');
+            } else if (name === 'admin') {
+                document.getElementById('adminMod').style.display = 'block';
+                document.getElementById('bAdmin').classList.add('active-btn');
+            } else {
+                document.getElementById('calcMod').style.display = 'block';
+                document.getElementById('modeToggleGroup').style.display = 'grid';
+                document.getElementById('b1').classList.add('active-btn');
+            }
+        }
+
+        // Update header function
+        function updateHeader() {
+            const selector = document.getElementById('methodSelector');
+            const navTitle = document.querySelector('.nav-title');
+            navTitle.innerText = selector.value ? "BathiXen " + selector.value + " Pro" : "BathiXen Master";
+        }
+
+        // Color mode variables
+        let activeMode = 'target'; 
+        let targetBaseRGB = [0, 0, 0];
+        let bgBaseRGB = [255, 255, 255];
+
+        // Set mode function
+        function setMode(m) {
+            activeMode = m;
+            document.getElementById('targetModeBtn').classList.toggle('mode-active-target', m === 'target');
+            document.getElementById('bgModeBtn').classList.toggle('mode-active-bg', m === 'bg');
+        }
+
+        // Show image function
+        function showImg() { 
+            document.getElementById('wheelContainer').style.display='none'; 
+            document.getElementById('canvasBox').style.display='block'; 
+            document.getElementById('fileIn').click(); 
+        }
+        
+        // Show wheel function
+        function showWheel() { 
+            document.getElementById('canvasBox').style.display='none'; 
+            document.getElementById('wheelContainer').style.display='block'; 
+        }
+
+        // Handle image upload
+        function handleImg(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const cvs = document.getElementById('mainCanvas');
+                        const ctx = cvs.getContext('2d');
+                        cvs.width = img.width; 
+                        cvs.height = img.height;
+                        ctx.drawImage(img, 0, 0);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Apply adjustments function
+        function applyAdj() {
+            let base = activeMode === 'target' ? targetBaseRGB : bgBaseRGB;
+            let b = parseInt(document.getElementById('bright').value);
+            let s = parseInt(document.getElementById('sat').value) / 100 + 1;
+            let [r, g, bl] = base;
+            
+            r = Math.min(255, Math.max(0, r + b));
+            g = Math.min(255, Math.max(0, g + b));
+            bl = Math.min(255, Math.max(0, bl + b));
+            
+            let gray = 0.2989 * r + 0.5870 * g + 0.1140 * bl;
+            r = Math.round(Math.min(255, Math.max(0, gray + s * (r - gray))));
+            g = Math.round(Math.min(255, Math.max(0, gray + s * (g - gray))));
+            bl = Math.round(Math.min(255, Math.max(0, gray + s * (bl - gray))));
+            
+            const prefix = activeMode === 'target' ? 'target' : 'bg';
+            document.getElementById(prefix + 'Swatch').style.background = `rgb(${r},${g},${bl})`;
+            document.getElementById(prefix + 'RGBDisp').innerText = `${r}, ${g}, ${bl}`;
+        }
+
+        // Reset Target to default
+        window.resetTargetToDefault = function() {
+            activeMode = 'target';
+            targetBaseRGB = [0, 0, 0];
+            document.getElementById('bright').value = 0;
+            document.getElementById('sat').value = 0;
+            document.getElementById('targetSwatch').style.background = 'rgb(0,0,0)';
+            document.getElementById('targetRGBDisp').innerText = '0, 0, 0';
+        }
+
+        // Reset Background to default
+        window.resetBgToDefault = function() {
+            activeMode = 'bg';
+            bgBaseRGB = [255, 255, 255];
+            document.getElementById('bright').value = 0;
+            document.getElementById('sat').value = 0;
+            document.getElementById('bgSwatch').style.background = 'rgb(255,255,255)';
+            document.getElementById('bgRGBDisp').innerText = '255, 255, 255';
+        }
+
+        // Pick color from canvas
+        function pickC(e) {
+            if(e.buttons !== 1) return;
+            const cvs = document.getElementById('mainCanvas');
+            const rect = cvs.getBoundingClientRect();
+            const x = (e.clientX - rect.left) * (cvs.width / rect.width);
+            const y = (e.clientY - rect.top) * (cvs.height / rect.height);
+            const p = cvs.getContext('2d').getImageData(x, y, 1, 1).data;
+            if(activeMode === 'target') targetBaseRGB = [p[0], p[1], p[2]]; 
+            else bgBaseRGB = [p[0], p[1], p[2]];
+            applyAdj();
+        }
+
+        // Pick color from wheel
+        function pickW(e) {
+            const cvs = document.getElementById('wheelCanvas');
+            const rect = cvs.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const p = cvs.getContext('2d').getImageData(x, y, 1, 1).data;
+            if(p[3] === 0) return;
+            document.getElementById('marker').style.left = x+'px'; 
+            document.getElementById('marker').style.top = y+'px';
+            if(activeMode === 'target') targetBaseRGB = [p[0], p[1], p[2]]; 
+            else bgBaseRGB = [p[0], p[1], p[2]];
+            applyAdj();
+        }
+
+        // Draw color wheel
+        function drawWheel() {
+            const canvas = document.getElementById('wheelCanvas');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const radius = canvas.width / 2;
+            
+            for (let i = 0; i < 360; i++) {
+                ctx.beginPath(); 
+                ctx.moveTo(radius, radius);
+                ctx.arc(radius, radius, radius, (i - 1) * Math.PI / 180, (i + 1) * Math.PI / 180);
+                ctx.fillStyle = `hsl(${i}, 100%, 50%)`; 
+                ctx.fill();
+            }
+            
+            const grad = ctx.createRadialGradient(radius, radius, 0, radius, radius, radius);
+            grad.addColorStop(0, 'white'); 
+            grad.addColorStop(1, 'rgba(255,255,255,0)');
+            ctx.fillStyle = grad; 
+            ctx.fill();
+        }
+
+        // Draw wheel on load
+        window.addEventListener('load', drawWheel);
+        
+        // Logout function
+        function logout() { 
+            if(confirm("පද්ධතියෙන් ඉවත් වීමට අවශ්‍යද?")) { 
+                localStorage.clear(); 
+                window.location.replace('login.html'); 
+            } 
+        }
+        
+        // ==============================================
+        // WAX COVERAGE FUNCTIONS
+        // ==============================================
+        
+        const CRACK_FACTOR = 0.6; // 60% penetration constant
+        
+        // Calculate effective weight
+        function calculateEffectiveWeight(totalWeight, waxPercent) {
+            const waxFreeWeight = totalWeight * (100 - waxPercent) / 100;
+            const penetrationWeight = totalWeight * waxPercent / 100 * CRACK_FACTOR;
+            
+            return {
+                effective: waxFreeWeight + penetrationWeight,
+                waxFree: waxFreeWeight,
+                penetration: penetrationWeight
+            };
+        }
+        
+        // Update wax display
+        window.updateWaxDisplay = function() {
+            const slider = document.getElementById('waxSlider');
+            const percentDisplay = document.getElementById('waxPercentDisplay');
+            const hiddenInput = document.getElementById('waxPercent');
+            const waxAreaBar = document.getElementById('waxAreaBar');
+            const dyeAreaBar = document.getElementById('dyeAreaBar');
+            const waxAreaPercent = document.getElementById('waxAreaPercent');
+            const dyeAreaPercent = document.getElementById('dyeAreaPercent');
+            const weightInput = document.getElementById('weight');
+            const effectiveContainer = document.getElementById('effectiveWeightContainer');
+            const effectiveValue = document.getElementById('effectiveWeightValue');
+            const waxFreeWeight = document.getElementById('waxFreeWeight');
+            const penetrationWeight = document.getElementById('penetrationWeight');
+            
+            if (!slider) return;
+            
+            const waxValue = parseInt(slider.value);
+            const dyeValue = 100 - waxValue;
+            
+            if (percentDisplay) percentDisplay.textContent = waxValue + '%';
+            if (hiddenInput) hiddenInput.value = waxValue;
+            
+            if (waxAreaBar) waxAreaBar.style.width = waxValue + '%';
+            if (dyeAreaBar) dyeAreaBar.style.width = dyeValue + '%';
+            
+            if (waxAreaPercent) waxAreaPercent.textContent = waxValue + '%';
+            if (dyeAreaPercent) dyeAreaPercent.textContent = dyeValue + '%';
+            
+            if (weightInput && weightInput.value) {
+                const totalWeight = parseFloat(weightInput.value);
+                if (!isNaN(totalWeight) && totalWeight > 0) {
+                    const weights = calculateEffectiveWeight(totalWeight, waxValue);
+                    
+                    if (effectiveContainer) effectiveContainer.style.display = 'block';
+                    if (effectiveValue) effectiveValue.textContent = weights.effective.toFixed(2) + 'g';
+                    if (waxFreeWeight) waxFreeWeight.textContent = weights.waxFree.toFixed(2) + 'g';
+                    if (penetrationWeight) penetrationWeight.textContent = weights.penetration.toFixed(2) + 'g';
+                    
+                    console.log(`📊 Weight Calculation:
+                        Total: ${totalWeight}g
+                        Wax: ${waxValue}%
+                        Wax-free area: ${weights.waxFree.toFixed(2)}g
+                        Penetration (60%): ${weights.penetration.toFixed(2)}g
+                        Effective weight: ${weights.effective.toFixed(2)}g
+                    `);
+                }
+            } else {
+                if (effectiveContainer) effectiveContainer.style.display = 'none';
+            }
+        };
+
+        // Set wax coverage
+        window.setWaxCoverage = function(value) {
+            const slider = document.getElementById('waxSlider');
+            if (slider) {
+                slider.value = value;
+                updateWaxDisplay();
+            }
+        };
+
+        // Process with wax
+        window.processWithWax = function() {
+            const weightInput = document.getElementById('weight');
+            const fabricSelect = document.getElementById('fabric');
+            const waxSlider = document.getElementById('waxSlider');
+            
+            if (!weightInput || !weightInput.value) {
+                alert('❌ කරුණාකර රෙදි බර ඇතුළත් කරන්න');
+                return;
+            }
+            
+            if (!fabricSelect || !fabricSelect.value) {
+                alert('❌ කරුණාකර රෙදි වර්ගය තෝරන්න ''   ''');
+                return                              ;
+            }
+            
+            const totalWeight = parseFloat(weightInput.value);
+            const waxPercent = parseInt(waxSlider?.value || 50);
+            const weights = calculateEffectiveWeight(totalWeight, waxPercent);
+            
+            console.log(`🎨 Generating recipe with WAX COVERAGE:
+                Total weight: ${totalWeight}g
+                Wax coverage: ${waxPercent}%
+                Effective weight: ${weights.effective.toFixed(2)}g
+            `);
+            
+            window.currentEffectiveWeight = weights.effective;
+            window.currentWaxPercent = waxPercent;
+            
+            if (typeof window.process === 'function') {
+                window.process();
+            } else {
+                alert('⚠️ Process function not found. Make sure app.js is loaded.');
+            }
+        };
+
+        // Update wax description when composition changes
+        document.addEventListener('DOMContentLoaded', function() {
+            const waxSelect = document.getElementById('waxCompositionSelect');
+            if (waxSelect) {
+                waxSelect.addEventListener('change', function() {
+                    const desc = document.getElementById('waxDescription');
+                    const comp = this.value;
+                    if (comp === 'standard') desc.innerHTML = '45°C-50°C - හොඳින් ඉරිතැලීම්';
+                    else if (comp === 'high_covering') desc.innerHTML = '55°C-60°C - අධික ආවරණය, ඇතුළට කාන්දු වීම අඩු';
+                    else if (comp === 'fine_lines') desc.innerHTML = '65°C-70°C - ඉතා සියුම් රේඛා, Portrait Masterpiece';
+                    else if (comp === 'eco_noboil') desc.innerHTML = '40°C - ඉතා පහසුවෙන් ඉවත් කළ හැකි';
+                });
+            }
+            
+            // Initialize wax display
+            setTimeout(() => {
+                updateWaxDisplay();
+            }, 500);
+        });
+    </script>
+
+    <!-- Scripts - Correct Order -->
+    <script src="js/security-enhancer.js"></script>
+    <script type="module" src="js/firebase-init.js"></script>
+    <script type="module" src="js/hsop-calculator.js"></script>
+    <script type="module" src="js/app.js"></script>
+    
+    <!-- Service Worker Registration -->
+   <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(reg => {
+                    console.log('✅ Service Worker registered');
+                    
+                    // Check for updates
+                    reg.addEventListener('updatefound', () => {
+                        const newWorker = reg.installing;
+                        console.log('🔄 New service worker installing...');
+                    });
+                })
+                .catch(err => {
+                    console.error('❌ Service Worker registration failed:', err);
+                });
+        });
+    }
+</script>
+</body>
+</html>
